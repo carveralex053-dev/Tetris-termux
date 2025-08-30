@@ -5,11 +5,11 @@
 
 using namespace std;
 
-void printGameScreen(int x, int y, char fill){
-	vector <vector<char>> gameScreen;//(rows, vector <char>(cols, fill));
+void printGameScreen(int rows, int cols, char fill){
+	vector <vector<char>> gameScreen(rows, vector <char>(cols, fill));
 
-	for (int i = 0; i < x; i++){
-		for (int j = 0; j < y; j++){
+	for (int i = 0; i < rows; i++){
+		for (int j = 0; j < cols; j++){
 			gameScreen[i][j] = fill;
 			cout << gameScreen[i][j];
 		}
@@ -18,7 +18,7 @@ void printGameScreen(int x, int y, char fill){
 };
 
 int main(){
-	printGameScreen(50, 20, '.');
+	printGameScreen(20, 50, '.');
 
 	return 0;
 }
