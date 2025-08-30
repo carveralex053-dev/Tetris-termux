@@ -1,24 +1,24 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <vector>
 
-class GameScreen{
-	private:
-		const int screen_x = 50;
-		const int screen_y = 20;
-	public:
-		char gameScreen[screen_x][screen_u];
-		void PrintGameScreen(){
-			for (int x = 0; x < screen_x; x++){
-				for (int y = 0; y < screen_y; y++){
-					gameScreen[x][y] = '.';
-				}
-			}
+using namespace std;
+
+void printGameScreen(int x, int y, char fill){
+	vector <vector<char>> gameScreen;//(rows, vector <char>(cols, fill));
+
+	for (int i = 0; i < x; i++){
+		for (int j = 0; j < y; j++){
+			gameScreen[i][j] = fill;
+			cout << gameScreen[i][j];
 		}
-}
+	cout << endl;
+	}
+};
 
 int main(){
-	std::cout << "Hello World" << std::endl;
+	printGameScreen(50, 20, '.');
 
 	return 0;
 }
