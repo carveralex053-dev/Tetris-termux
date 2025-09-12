@@ -3,6 +3,8 @@
 #include <chrono>
 #include <vector>
 #include <cstdlib>
+#include <termios.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -51,6 +53,46 @@ vector<vector<char>> tet_z_reverse = {
 
 vector<vector<vector<char>>> tetronimos = {tet_O, tet_z, tet_z_reverse, tet_L, tet_L_reverse, tet_I, tet_T};
 
+//terminal controls, stolen honestly from the web
+class TerminalController {
+private:
+    struct termios original;
+    
+public:
+    TerminalController() {
+        tcgetattr(STDIN_FILENO, &original);
+        struct termios raw = original;
+        raw.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &raw);
+    }
+    
+    ~TerminalController() {
+        tcsetattr(STDIN_FILENO, TCSANOW, &original);
+    }
+    
+    char getKey() {
+        char c = 0;
+        read(STDIN_FILENO, &c, 1);
+        return c;
+    }
+};
+
+class CursorHider {
+public:
+    CursorHider() { hide(); }
+    ~CursorHider() { show(); }
+    
+    static void hide() {
+        std::cout << "\033[?25l";
+        std::cout.flush();
+    }
+    
+    static void show() {
+        std::cout << "\033[?25h";
+        std::cout.flush();
+    }
+};
+
 class GameScreen
 {
 private:
@@ -95,6 +137,9 @@ public:
 };
 
 int main(){
+    TerminalController term;
+
+    CursorHider ch;
     system("clear");
 
     GameScreen myScreen;
@@ -108,5 +153,12 @@ int main(){
         myScreen.printScreen(newScreen);
         system("clear");
     };
+
+    while (true){
+        system("clear");
+        myScreen.printScreen(newScreen);
+        this_thread::sleep_for(chrono::seconds(1));
+    };
+    
     return 0;
 };
